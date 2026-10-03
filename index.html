@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f4f1">
+  <meta name="description" content="Análisis local de órdenes de mantenimiento CMMS/GMAO.">
+  <title>GMAO | Inteligencia de mantenimiento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#inicio" aria-label="GMAO, inicio">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><b>GMAO</b><small>INTELIGENCIA DE ACTIVOS</small></span>
+      </a>
+      <div class="side-label">ESPACIO DE ANÁLISIS</div>
+      <nav aria-label="Navegación principal">
+        <a class="nav-link active" href="#inicio"><span class="nav-icon">◫</span>Resumen ejecutivo</a>
+        <a class="nav-link" href="#estrategia"><span class="nav-icon">▥</span>Estrategia</a>
+        <a class="nav-link" href="#fallas"><span class="nav-icon">⌁</span>Modos de falla</a>
+        <a class="nav-link" href="#activos"><span class="nav-icon">⊙</span>Criticidad de activos</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="privacy-icon">⌑</div>
+        <strong>Análisis privado</strong>
+        <p>Los archivos se procesan en este navegador. No se envían a un servidor.</p>
+        <div class="side-foot">MEC048H <span>•</span> GESTIÓN DE ACTIVOS</div>
+      </div>
+    </aside>
+
+    <main id="inicio" class="main-content">
+      <header class="topbar">
+        <div class="breadcrumbs">MANTENIMIENTO <span>/</span> ANÁLISIS CMMS</div>
+        <div class="top-actions">
+          <span class="local-badge"><i></i> PROCESAMIENTO LOCAL</span>
+          <button class="button button-dark" id="export-pdf" type="button" title="Imprimir o guardar el informe como PDF">
+            <span aria-hidden="true">⇩</span> Exportar informe
+          </button>
+        </div>
+      </header>
+
+      <section class="page-intro">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> REPORTE TÉCNICO-GERENCIAL</div>
+          <h1>Gestión de<br><em>mantenimiento.</em></h1>
+          <p class="intro-copy">Indicadores de desempeño, mantenibilidad y priorización de activos a partir de tus órdenes de trabajo.</p>
+        </div>
+        <div class="intro-meta"><span class="meta-label">DATASET ACTIVO</span><strong id="dataset-name">Cargando archivo…</strong><span id="updated-at">Esperando datos</span></div>
+      </section>
+
+      <section class="control-strip" aria-label="Controles del análisis">
+        <label class="filter-control"><span>UNIDAD</span><select id="unit-filter"><option value="">Todas las unidades</option></select></label>
+        <label class="filter-control"><span>TIPO DE MANTENIMIENTO</span><select id="maintenance-filter"><option value="">Todos los tipos</option></select></label>
+        <label class="filter-control"><span>INDICADOR PARETO</span><select id="pareto-metric"><option value="frequency">Frecuencia</option><option value="downtime">Downtime</option><option value="cost">Costo directo</option></select></label>
+        <button class="button button-quiet" id="reset-filters" type="button">Restablecer</button>
+        <button class="button button-outline" id="upload-trigger" type="button"><span aria-hidden="true">＋</span> Cargar dataset</button>
+        <input id="file-input" type="file" accept=".csv,text/csv,.txt,text/plain" hidden>
+      </section>
+
+      <div class="dataset-status" id="dataset-status" role="status" aria-live="polite">Cargando dataset de ejemplo…</div>
+
+      <section class="report-section" aria-labelledby="summary-title">
+        <div class="section-heading"><div><span class="section-number">01</span><h2 id="summary-title">Resumen ejecutivo</h2></div><span class="section-note" id="scope-note">VISIÓN GENERAL</span></div>
+        <div class="kpi-grid">
+          <article class="kpi-card"><span class="kpi-label">ÓRDENES DE TRABAJO</span><strong id="kpi-orders">—</strong><small>OT únicas en el alcance</small><span class="kpi-index">01</span></article>
+          <article class="kpi-card"><span class="kpi-label">HORAS-HOMBRE</span><strong id="kpi-labor">—</strong><small>Esfuerzo registrado · h</small><span class="kpi-index">02</span></article>
+          <article class="kpi-card"><span class="kpi-label">DOWNTIME TOTAL</span><strong id="kpi-downtime">—</strong><small>Indisponibilidad · h</small><span class="kpi-index">03</span></article>
+          <article class="kpi-card"><span class="kpi-label">COSTO DIRECTO</span><strong id="kpi-cost">—</strong><small>CLP registrados</small><span class="kpi-index">04</span></article>
+          <article class="kpi-card kpi-accent"><span class="kpi-label">MTTR CORRECTIVO</span><strong id="kpi-mttr">—</strong><small>Promedio de reparación · h</small><span class="kpi-index">05</span></article>
+          <article class="kpi-card"><span class="kpi-label">MEDIANA REPARACIÓN</span><strong id="kpi-median">—</strong><small>Tiempo de reparación · h</small><span class="kpi-index">06</span></article>
+        </div>
+        <div class="finding" id="key-finding"><span class="finding-mark">!</span><div><span class="finding-label">HALLAZGO CLAVE</span><p>Carga un dataset para generar el diagnóstico.</p></div></div>
+      </section>
+
+      <section class="report-section" id="estrategia" aria-labelledby="strategy-title">
+        <div class="section-heading"><div><span class="section-number">02</span><h2 id="strategy-title">Estrategia de mantenimiento</h2></div><span class="section-note">MIX DE RECURSOS E IMPACTO</span></div>
+        <div class="analysis-grid strategy-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><span class="panel-kicker">DISTRIBUCIÓN</span><h3>Órdenes por estrategia</h3></div><span class="panel-unit">% del total</span></div><div class="chart-legend"><span><i class="legend-dot dot-ink"></i>OT</span><span><i class="legend-dot dot-teal"></i>HH</span><span><i class="legend-dot dot-orange"></i>Downtime</span><span><i class="legend-dot dot-blue"></i>Costo</span></div><div id="mix-chart" class="chart-container"></div></article>
+          <article class="panel table-panel"><div class="panel-heading"><div><span class="panel-kicker">COMPARATIVO</span><h3>Impacto por tipo</h3></div><span class="panel-unit">participación</span></div><div class="table-wrap"><table><thead><tr><th>Tipo</th><th>% OT</th><th>% HH</th><th>% DT</th><th>% Costo</th></tr></thead><tbody id="mix-table"></tbody></table></div><p class="table-footnote">OT únicas por tipo; recursos y costos agregados según registros.</p></article>
+        </div>
+      </section>
+
+      <section class="report-section" id="fallas" aria-labelledby="failure-title">
+        <div class="section-heading"><div><span class="section-number">03</span><h2 id="failure-title">Modos de falla prioritarios</h2></div><span class="section-note">ANÁLISIS DE PARETO · TOP 10</span></div>
+        <article class="panel full-panel"><div class="panel-heading"><div><span class="panel-kicker">IMPACTO ACUMULADO</span><h3 id="pareto-title">Modos de falla por frecuencia</h3></div><span class="panel-unit" id="pareto-unit">órdenes únicas</span></div><div id="pareto-chart" class="chart-container chart-tall"></div></article>
+      </section>
+
+      <section class="report-section" aria-labelledby="mttr-title">
+        <div class="section-heading"><div><span class="section-number">04</span><h2 id="mttr-title">Mantenibilidad</h2></div><span class="section-note">ÓRDENES CORRECTIVAS VÁLIDAS</span></div>
+        <article class="panel full-panel"><div class="panel-heading"><div><span class="panel-kicker">TIEMPO MEDIO DE REPARACIÓN</span><h3>MTTR por tipo de equipo</h3></div><span class="panel-unit">horas · línea: MTTR global</span></div><div id="mttr-chart" class="chart-container chart-tall"></div></article>
+      </section>
+
+      <section class="report-section" id="activos" aria-labelledby="asset-title">
+        <div class="section-heading"><div><span class="section-number">05</span><h2 id="asset-title">Priorización de activos</h2></div><span class="section-note">FRECUENCIA VS. TIEMPO DE REPARACIÓN</span></div>
+        <div class="analysis-grid jackknife-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><span class="panel-kicker">JACK-KNIFE NORMALIZADO</span><h3>Equipos con mayor riesgo relativo</h3></div><span class="panel-unit">Top 80</span></div><div id="jackknife-chart" class="chart-container scatter-container"></div><div class="quadrant-legend"><span><i class="q-dot q-severe"></i>Grave</span><span><i class="q-dot q-chronic"></i>Crónico</span><span><i class="q-dot q-acute"></i>Agudo</span><span><i class="q-dot q-control"></i>Bajo control</span></div></article>
+          <article class="panel table-panel"><div class="panel-heading"><div><span class="panel-kicker">PRIORIZACIÓN</span><h3>Activos críticos</h3></div><span class="panel-unit">riesgo relativo</span></div><div class="table-wrap"><table><thead><tr><th>Equipo</th><th>Fallas</th><th>MTTR</th><th>Cuadrante</th></tr></thead><tbody id="asset-table"></tbody></table></div><p class="table-footnote">Riesgo relativo = frecuencia normalizada × MTTR normalizado.</p></article>
+        </div>
+      </section>
+
+      <section class="report-section quality-section" aria-labelledby="quality-title">
+        <div class="section-heading"><div><span class="section-number">06</span><h2 id="quality-title">Calidad de datos</h2></div><span class="section-note">CONTROL PREVIO AL ANÁLISIS</span></div>
+        <div class="quality-strip" id="quality-summary"></div>
+      </section>
+
+      <footer class="page-footer"><span>GMAO · ANÁLISIS LOCAL DE MANTENIMIENTO</span><span>Generado <b id="footer-date">—</b></span></footer>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
